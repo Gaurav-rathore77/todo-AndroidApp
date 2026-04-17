@@ -1,15 +1,13 @@
 import { Text, View } from "react-native";
 import { Link } from 'expo-router';
+import TodoItem from '../components/TodoItem';
 export default function Index() {
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+     className=""
     >
-       <Text className="text-xl font-bold text-blue-500">Edit app/index.tsx to edit this screen.</Text>
+       <Text className="flex justify-center  text-2xl mt-5 font-bold text-blue-500">Your todo</Text>
+       <TodoItem />
        <Link href="/about">About</Link>
     </View>
   );
