@@ -92,7 +92,7 @@ export default function TodoItem() {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
+                throw new Error(data.message || 'Login failed');  
             }
             setToken(data.token);
             setUser(data.user);
@@ -120,7 +120,7 @@ export default function TodoItem() {
             if (!response.ok) throw new Error('Failed to fetch');
             const data = await response.json();
             setTodos(data);
-        } catch (err: any) {
+        } catch (err: any) { 
             setError(err.message);
         }
     };
