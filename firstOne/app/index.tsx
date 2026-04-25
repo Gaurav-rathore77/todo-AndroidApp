@@ -1,10 +1,12 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
+  const router = useRouter();
 
   const increment = () => {
     setCount(count + 1);
@@ -34,9 +36,11 @@ export default function Index() {
         <Text>Decrement</Text>
       </TouchableOpacity>
       <ScrollView className="flex-1">
-        {data.map((items : any) => (
-        <Text key={items.id}>{items.title}</Text>
-      ))}
+        {data.map((items: any) => (
+          <TouchableOpacity key={items.id} onPress={() => router.push({ pathname: '/[id]/page', params: { id: items.id } })}>
+            <Text>{items.title}</Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );
