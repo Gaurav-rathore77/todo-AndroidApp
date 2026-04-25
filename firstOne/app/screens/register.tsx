@@ -2,11 +2,34 @@ import {useState} from 'react';
 // import { Text  } from '@react-navigation/elements';
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 // import { View } from 'react-native-reanimated/lib/typescript/Animated';
+interface UserData {
+    username?: string;
+    password?: string;
+}
 export default function Register() {
+    
     // const [name, setName] = useState('');
-    const [data, setData] = useState<{username?: string; password?: string}>({});
-    const handleSubmit = () => {
-        console.log(data);
+    const [data, setData] = useState<UserData>({});
+
+    const handleUsernameChange = (text: string) => {
+        setData({...data, username: text});
+    };
+    
+    const handlePasswordChange = (text: string) => {
+        setData({...data, password: text});
+    };
+    
+    const handleSubmit = async () => {
+        const {username, password} = data;
+        const response = await fetch('http://localhost:3000/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username, password})
+        });
+        const responseData = await response.json();
+        console.log(responseData);
     };
     return (
         <View className='bg-gray-400 h-screen flex items-center justify-center'>
