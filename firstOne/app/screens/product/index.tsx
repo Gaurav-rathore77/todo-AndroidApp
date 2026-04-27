@@ -1,5 +1,5 @@
 import { Button } from "@react-navigation/elements";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
@@ -25,13 +25,22 @@ export default function Index() {
     };
 
     const fetchProducts = async () => {
-        const token = await AsyncStorage.getItem("token");
-        fetch("http://localhost:3000/products", {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => setData(data))
-            .catch((err) => console.error(err));
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const response = await fetch("http://localhost:3000/product", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const result = await response.json();
+            if (Array.isArray(result)) {
+                setData(result);
+            } else {
+                console.error("Expected array, got:", result);
+                setData([]);
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
+            setData([]);
+        }
     };
 
     const handleSubmitForm = async () => {
@@ -105,27 +114,29 @@ export default function Index() {
 
             {/* Products List */}
             <Text className="text-lg font-bold text-gray-800 mb-3">Your Products</Text>
-            {data.length === 0 ? (
-                <Text className="text-gray-500 text-center mt-4">No products yet. Add your first product above!</Text>
-            ) : (
-                data.map((product: Product) => (
-                    <TouchableOpacity 
-                        key={product._id} 
-                        onPress={() => handleProductClick(product._id)}
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item._id}
+                ListEmptyComponent={
+                    <Text className="text-gray-500 text-center mt-4">No products yet. Add your first product above!</Text>
+                }
+                renderItem={({ item }: { item: Product }) => (
+                    <TouchableOpacity
+                        onPress={() => handleProductClick(item._id)}
                         className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm"
                     >
                         <View className="flex-row justify-between items-center">
                             <View className="flex-1">
-                                <Text className="text-lg font-semibold text-gray-800">{product.name}</Text>
-                                {product.description && (
-                                    <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>{product.description}</Text>
+                                <Text className="text-lg font-semibold text-gray-800">{item.name}</Text>
+                                {item.description && (
+                                    <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>{item.description}</Text>
                                 )}
                             </View>
-                            <Text className="text-lg font-bold text-green-600">₹{product.price}</Text>
+                            <Text className="text-lg font-bold text-green-600">₹{item.price}</Text>
                         </View>
                     </TouchableOpacity>
-                ))
-            )}
+                )}
+            />
         </View>
     );
 }

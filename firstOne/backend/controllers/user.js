@@ -25,12 +25,12 @@ const login = async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
             const token = jwt.sign({ username }, "secret", { expiresIn: "1h" });
-            res.send(token);
+            res.json({ token });
         } else {
-            res.send("Invalid password");
+            res.status(401).json({ error: "Invalid password" });
         }
     } else {
-        res.send("User not found");
+        res.status(404).json({ error: "User not found" });
     }
 };
 
