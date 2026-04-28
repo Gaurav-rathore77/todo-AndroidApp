@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { useUserStore } from "../../store/user";
+import { useUserStore } from "./store/user";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -12,6 +12,10 @@ export default function Login() {
     const { login, isLoading, error } = useUserStore();
     
     const handleSubmit = async () => {
+        if (!username || !password) {
+            return;
+        }
+        
         const success = await login(username, password);
         if (success) {
             router.push("/");
@@ -59,8 +63,8 @@ export default function Login() {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
-                    onPress={() => router.push('/screens/auth/register')}
+                <TouchableOpacity
+                    onPress={() => router.push('/auth/register' as any)}
                     className="mt-4"
                 >
                     <Text className="text-blue-600 text-center text-sm">Don't have an account? Register</Text>

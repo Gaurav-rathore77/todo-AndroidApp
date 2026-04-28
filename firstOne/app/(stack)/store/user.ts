@@ -1,5 +1,7 @@
 import { create } from 'zustand'
-import { loginApi } from '../api/auth'
+
+// No persistence for now - in-memory only
+import { loginApi } from '../../api/auth'
 
 interface User {
     id: string

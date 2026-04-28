@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { TextInput } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// No AsyncStorage - using mock data
 
 interface Product {
     _id: string;
@@ -26,45 +26,34 @@ export default function Index() {
 
     const fetchProducts = async () => {
         try {
-            const token = await AsyncStorage.getItem("token");
-            const response = await fetch("http://localhost:3000/product", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const result = await response.json();
-            if (Array.isArray(result)) {
-                setData(result);
-            } else {
-                console.error("Expected array, got:", result);
-                setData([]);
-            }
-        } catch (err) {
-            console.error("Fetch error:", err);
-            setData([]);
+            // Mock data for now
+            const mockProducts: Product[] = [
+                { _id: "1", name: "Mock Product 1", price: 100, description: "Test product" },
+                { _id: "2", name: "Mock Product 2", price: 200, description: "Another test" }
+            ];
+            setData(mockProducts);
+        } catch (error) {
+            console.error("Fetch error:", error);
         }
     };
 
     const handleSubmitForm = async () => {
-        const token = await AsyncStorage.getItem("token");
-        fetch("http://localhost:3000/product/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ name, price: Number(price), description }),
-        })
-            .then((res) => res.json())
-            .then(() => {
-                setName("");
-                setPrice("");
-                setDescription("");
-                fetchProducts();
-            })
-            .catch((err) => console.error(err));
+        // Mock add product
+        const newProduct: Product = {
+            _id: Date.now().toString(),
+            name,
+            price: Number(price),
+            description
+        };
+        
+        setData(prev => [...prev, newProduct]);
+        setName("");
+        setPrice("");
+        setDescription("");
     };
 
     const handleProductClick = (id: string) => {
-        router.push(`/screens/product/${id}/page`);
+        router.push(`/product/${id}/page` as any);
     };
 
     useEffect(() => {

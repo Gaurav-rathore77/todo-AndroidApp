@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
+import { registerApi } from '../api/auth';
 
 interface UserData {
     username?: string;
@@ -20,22 +21,15 @@ export default function Register() {
         
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/user/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: data.username,
-                    password: data.password
-                })
+            const response = await registerApi({
+                username: data.username!,
+                password: data.password!
             });
-            const responseData = await response.json();
-            console.log(responseData);
             
-            if (response.ok) {
-                router.push('/screens/auth/login');
-            }
+            console.log("Registration successful:", response);
+            
+            // Redirect to login page
+            router.push("/login");
         } catch (error) {
             console.error("Registration error:", error);
         } finally {
@@ -92,7 +86,7 @@ export default function Register() {
 
                 {/* Footer */}
                 <View className="flex-row justify-between">
-                    <TouchableOpacity onPress={() => router.push('/screens/auth/login')}>
+                    <TouchableOpacity onPress={() => router.push('/login')}>
                         <Text className="text-indigo-600 text-sm">Already have an account?</Text>
                     </TouchableOpacity>
                 </View>

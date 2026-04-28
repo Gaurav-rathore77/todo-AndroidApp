@@ -17,7 +17,9 @@ app.use("/product", productRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server running");
 });
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
