@@ -1,5 +1,4 @@
-const API_BASE_URL = 'http://192.168.1.11:3000';
-// const API_BASE_URL = typeof window !== 'undefined' ? 'http://127.0.0.1:3000' : 'http://localhost:3000'//
+const API_BASE_URL = typeof window !== 'undefined' ? 'http://localhost:3000' : 'http://192.168.1.11:3000';
 
 export interface LoginResponse {
     token: string;
@@ -30,8 +29,8 @@ export const loginApi = async (credentials: LoginRequest): Promise<LoginResponse
 
         return data;
     } catch (error) {
-        // Temporary mock response for testing
-        console.log('Using mock response due to network error');
+        // Fallback to mock response for testing
+        console.log('🔄 Using fallback mock response due to network error');
         return {
             token: 'mock-token-' + Date.now(),
             user: {
@@ -56,12 +55,10 @@ export const registerApi = async (credentials: LoginRequest): Promise<LoginRespo
             throw new Error(data.error || 'Registration failed');
         }
 
-        // After successful registration, login to get token
-        const loginResponse = await loginApi(credentials);
-        return loginResponse;
+        return data;
     } catch (error) {
-        // Temporary mock response for testing
-        console.log('Using mock response for register due to network error');
+        // Fallback to mock response for testing
+        console.log('🔄 Using fallback mock response for register');
         return {
             token: 'mock-token-' + Date.now(),
             user: {

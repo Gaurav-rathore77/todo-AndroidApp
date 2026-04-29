@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { useUserStore } from "./store/user";
+import { useUserStore } from "../store/user";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -9,7 +9,10 @@ export default function Login() {
     const router = useRouter();
     
     // Use store
-    const { login, isLoading, error } = useUserStore();
+    // const { login, isLoading, error } = useUserStore();
+    const login = useUserStore((s) => s.login);
+    const isLoading = useUserStore((s) => s.isLoading);
+    const error = useUserStore((s) => s.error);
     
     const handleSubmit = async () => {
         if (!username || !password) {
@@ -18,7 +21,7 @@ export default function Login() {
         
         const success = await login(username, password);
         if (success) {
-            router.push("/");
+            router.replace("/");
         }
     };
     

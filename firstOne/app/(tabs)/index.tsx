@@ -5,7 +5,8 @@ import { useState } from "react";
 
 function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
 
   const navItem = (label: string, route: any, icon: string) => (
     <Pressable
@@ -28,8 +29,27 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
       onRequestClose={onClose}
     >
       <View className="flex-1 bg-black/50">
-        <Pressable className="flex-1" onPress={onClose} />
-        <View className="bg-white h-3/4 rounded-t-3xl">
+        <Pressable
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+          }}
+          onPress={onClose}
+        />
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            height: "75%",
+            backgroundColor: "white",
+            zIndex: 2,
+          }}
+        >
           {/* Header */}
           <View className="bg-indigo-600 p-6 rounded-t-3xl flex-row justify-between items-center">
             <View>
@@ -53,6 +73,7 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
             {user && (
               <>
                 <View className="h-px bg-gray-200 my-2 mx-4" />
+                {navItem("My Profile", "/profile" as any, "👤")}
                 {navItem("Admin Panel", "/admin" as any, "⚙️")}
               </>
             )}
@@ -94,7 +115,8 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
 
 export default function HomeTab() {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -176,6 +198,7 @@ export default function HomeTab() {
           </View>
         )}
 
+        
         {/* Info Section */}
         <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
           <Text className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">

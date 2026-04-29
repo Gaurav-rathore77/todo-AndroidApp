@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import { registerApi } from '../api/auth';
+import { registerApi } from '../../api/auth';
 
 interface UserData {
     username?: string;
@@ -29,7 +29,7 @@ export default function Register() {
             console.log("Registration successful:", response);
             
             // Redirect to login page
-            router.push("/login");
+            router.replace("/login");
         } catch (error) {
             console.error("Registration error:", error);
         } finally {
@@ -86,7 +86,7 @@ export default function Register() {
 
                 {/* Footer */}
                 <View className="flex-row justify-between">
-                    <TouchableOpacity onPress={() => router.push('/login')}>
+                    <TouchableOpacity onPress={() => router.replace('/login')}>
                         <Text className="text-indigo-600 text-sm">Already have an account?</Text>
                     </TouchableOpacity>
                 </View>

@@ -11,7 +11,7 @@ function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
 }
 
 export default function TabLayout() {
-  const { user } = useUserStore();
+  const user = useUserStore((s) => s.user);
 
   return (
     <Tabs

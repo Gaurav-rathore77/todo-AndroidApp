@@ -5,7 +5,8 @@ import { useState } from "react";
 
 function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
 
   const navItem = (label: string, route: any, icon: string) => (
     <TouchableOpacity
@@ -20,18 +21,39 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View className="flex-1 bg-black/50">
-        <TouchableOpacity className="flex-1" onPress={onClose} />
-        <View className="bg-white h-3/4 rounded-t-3xl">
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+          }}
+          onPress={onClose}
+        />
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            height: "75%",
+            backgroundColor: "white",
+            zIndex: 2,
+          }}
+        >
           <View className="bg-indigo-600 p-6 rounded-t-3xl flex-row justify-between items-center">
             <View>
-              <Text className="text-white text-xl font-bold">{user ? `👤 ${user.username}` : "My App"}</Text>
+              <Text className="text-white text-xl font-bold">
+                {user ? `👤 ${user.username}` : "My App"}
+              </Text>
               <Text className="text-indigo-200 text-sm mt-1">{user ? "Logged In" : "Guest"}</Text>
             </View>
             <TouchableOpacity onPress={onClose}><Text className="text-white text-2xl">✕</Text></TouchableOpacity>
           </View>
           <ScrollView className="flex-1">
             {navItem("Home", "/", "🏠")}
-            {navItem("Products", "/product/index" as any, "📦")}
+            {navItem("Products", "/product" as any, "📦")}
             {navItem("About", "/about" as any, "ℹ️")}
             {user && <>{navItem("Admin Panel", "/admin" as any, "⚙️")}</>}
             <View className="p-4 mt-4">
@@ -41,10 +63,10 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
                 </TouchableOpacity>
               ) : (
                 <>
-                  <TouchableOpacity onPress={() => { router.push("/auth/login" as any); onClose(); }} className="bg-blue-600 py-4 rounded-lg mb-3">
+                  <TouchableOpacity onPress={() => { router.replace("/auth/login" as any); onClose(); }} className="bg-blue-600 py-4 rounded-lg mb-3">
                     <Text className="text-white text-center font-semibold">Login</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => { router.push("/auth/register" as any); onClose(); }} className="bg-green-500 py-4 rounded-lg">
+                  <TouchableOpacity onPress={() => { router.replace("/auth/register" as any); onClose(); }} className="bg-green-500 py-4 rounded-lg">
                     <Text className="text-white text-center font-semibold">Register</Text>
                   </TouchableOpacity>
                 </>
@@ -59,7 +81,8 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
 
 export default function AdminPanel() {
   const router = useRouter();
-  const { user, logout } = useUserStore();
+  const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navButton = (label: string, route: any, color: string = "bg-blue-500") => (
