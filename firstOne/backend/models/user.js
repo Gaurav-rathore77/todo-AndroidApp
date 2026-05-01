@@ -5,9 +5,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String,
+        required: false
+    },
     password: {
         type: String,
         required: true
+    },
+    profileImage: {
+        type: String,
+        default: null
     }
 });
 

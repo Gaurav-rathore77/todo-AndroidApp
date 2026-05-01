@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { TextInput } from "react-native";
 import { uploadImageFromUri } from "../../api/image";
+import { useUserStore } from "../../store/user";
+
 // No AsyncStorage - using mock data
 
 interface Product {
@@ -24,6 +26,7 @@ export default function Index() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
     const router = useRouter();
+    const token = useUserStore((state: any) => state.token);
 
     const handleBack = () => {
         router.push("/");
@@ -31,36 +34,69 @@ export default function Index() {
 
     const fetchProducts = async () => {
         try {
-            // Mock data for now
+            const response = await fetch("http://localhost:3000/product/all", {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const products = await response.json();
+            setData(products);
+        } catch (error) {
+            console.error("Fetch error:", error);
+            // Fallback to mock data if backend fails
             const mockProducts: Product[] = [
                 { _id: "1", name: "Mock Product 1", price: 100, description: "Test product" },
                 { _id: "2", name: "Mock Product 2", price: 200, description: "Another test" }
             ];
             setData(mockProducts);
-        } catch (error) {
-            console.error("Fetch error:", error);
         }
     };
 
     const handleSubmitForm = async () => {
-        // Mock add product
-        const newProduct: Product = {
-            _id: Date.now().toString(),
-            name,
-            price: Number(price),
-            description
-        };
-        
-        const imageUrl = await uploadProductImage();
-        if (imageUrl) {
-            newProduct.image = imageUrl;
+        try {
+            const imageUrl = await uploadProductImage();
+            
+            const response = await fetch("http://localhost:3000/product/create", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name,
+                    price: Number(price),
+                    description,
+                    image: imageUrl
+                })
+            });
+            
+            if (response.ok) {
+                // Refresh products list
+                fetchProducts();
+                // Clear form
+                setName("");
+                setPrice("");
+                setDescription("");
+                setSelectedImage(null);
+            } else {
+                throw new Error('Failed to create product');
+            }
+        } catch (error) {
+            console.error('Submit error:', error);
+            // Fallback: add to local state
+            const newProduct: Product = {
+                _id: Date.now().toString(),
+                name,
+                price: Number(price),
+                description,
+                image: await uploadProductImage() || undefined
+            };
+            setData(prev => [...prev, newProduct]);
+            setName("");
+            setPrice("");
+            setDescription("");
+            setSelectedImage(null);
         }
-        
-        setData(prev => [...prev, newProduct]);
-        setName("");
-        setPrice("");
-        setDescription("");
-        setSelectedImage(null);
     };
 
     const handleProductClick = (id: string) => {

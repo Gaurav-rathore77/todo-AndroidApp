@@ -1,21 +1,40 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+// Email temporarily disabled to avoid authentication errors
+// const { sendWelcomeEmail, sendAdminNotification } = require("../config/email");
+
 const register = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, email, password, profileImage } = req.body;
         if (!username || !password) {
             return res.status(400).json({ error: "Username and password required" });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, password: hashedPassword });
+        const user = new User({ 
+            username, 
+            email: email || null,
+            password: hashedPassword,
+            profileImage: profileImage || null
+        });
         await user.save();
-        res.json({ message: "User registered" });
+        
+        // Generate token for immediate login
+        const token = jwt.sign({ userId: user._id }, "secret", { expiresIn: "1h" });
+        
+        res.json({ 
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                profileImage: user.profileImage
+            }
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 const login = async (req, res) => {
     const { username, password } = req.body;
@@ -24,8 +43,17 @@ const login = async (req, res) => {
     if (user) {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
-            const token = jwt.sign({ username }, "secret", { expiresIn: "1h" });
-            res.json({ token });
+            const token = jwt.sign({ userId: user._id }, "secret", { expiresIn: "1h" });
+            
+            res.json({ 
+                token,
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    profileImage: user.profileImage
+                }
+            });
         } else {
             res.status(401).json({ error: "Invalid password" });
         }

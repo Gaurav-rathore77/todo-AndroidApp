@@ -1,21 +1,74 @@
 import { useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import * as ImagePicker from 'expo-image-picker';
 import { registerApi } from '../../api/auth';
+import { uploadImageFromUriFixed } from '../../api/image-fixed';
 
 interface UserData {
     username?: string;
+    email?: string;
     password?: string;
+    profileImage?: string;
 }
 
 export default function Register() {
     const [data, setData] = useState<UserData>({});
     const [loading, setLoading] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
     const router = useRouter();
 
+    const pickImage = async () => {
+        // Request permission
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
+        if (permissionResult.granted === false) {
+            Alert.alert("Permission Required", "Please grant camera roll permissions to select an image");
+            return;
+        }
+
+        // Launch image picker
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.7,
+        });
+
+        if (!result.canceled && result.assets[0]) {
+            setUploadingImage(true);
+            try {
+                console.log("Uploading image...");
+                const imageUrl = await uploadImageFromUriFixed(
+                    result.assets[0].uri,
+                    `profile-${Date.now()}.jpg`,
+                    "/profile-images"
+                );
+                console.log("Image uploaded successfully:", imageUrl);
+                setData({ ...data, profileImage: imageUrl });
+                Alert.alert("Success", "Profile image uploaded successfully!");
+            } catch (error) {
+                console.error("Image upload error:", error);
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+                console.log("🔍 Detailed error:", errorMessage);
+                
+                // Show more specific error message
+                if (errorMessage.includes('Could not connect to any backend server')) {
+                    Alert.alert("Connection Error", "Cannot connect to backend server. Please make sure the backend is running on localhost:3000");
+                } else if (errorMessage.includes('ImageKit upload failed')) {
+                    Alert.alert("Upload Error", "Failed to upload to ImageKit. Please check your internet connection and try again.");
+                } else {
+                    Alert.alert("Error", `Failed to upload image: ${errorMessage}`);
+                }
+            } finally {
+                setUploadingImage(false);
+            }
+        }
+    };
+
     const handleSubmit = async () => {
-        if (!data.username || !data.password) {
-            console.error("Username and password required");
+        if (!data.username || !data.password || !data.email) {
+            Alert.alert("Error", "Username, email and password required");
             return;
         }
         
@@ -23,7 +76,9 @@ export default function Register() {
         try {
             const response = await registerApi({
                 username: data.username!,
-                password: data.password!
+                email: data.email!,
+                password: data.password!,
+                profileImage: data.profileImage
             });
             
             console.log("Registration successful:", response);
@@ -32,6 +87,7 @@ export default function Register() {
             router.replace("/login");
         } catch (error) {
             console.error("Registration error:", error);
+            Alert.alert("Error", "Registration failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -40,12 +96,34 @@ export default function Register() {
     return (
         <View className='flex-1 bg-indigo-600 justify-center px-6'>
             <View className="bg-white rounded-xl p-6 shadow-lg">
+                {/* Profile Image */}
+                <View className="items-center mb-6">
+                    <TouchableOpacity 
+                        onPress={pickImage}
+                        disabled={uploadingImage}
+                        className="relative"
+                    >
+                        {data.profileImage ? (
+                            <Image 
+                                className="w-24 h-24 rounded-full border-4 border-indigo-500"
+                                source={{ uri: data.profileImage }}
+                            />
+                        ) : (
+                            <View className="w-24 h-24 rounded-full bg-gray-200 border-4 border-indigo-500 justify-center items-center">
+                                <Text className="text-3xl">📷</Text>
+                            </View>
+                        )}
+                        {uploadingImage && (
+                            <View className="absolute inset-0 bg-black bg-opacity-50 rounded-full justify-center items-center">
+                                <Text className="text-white text-sm">Uploading...</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                    <Text className="text-sm text-gray-600 mt-2">Tap to add profile photo</Text>
+                </View>
+
                 {/* Logo */}
                 <View className="items-center mb-6">
-                    <Image 
-                        className="w-20 h-20" 
-                        source={{ uri: 'https://img.icons8.com/fluent/344/year-of-tiger.png' }} 
-                    />
                     <Text className="text-2xl font-bold text-indigo-700 mt-2">Register</Text>
                 </View>
 
@@ -57,6 +135,19 @@ export default function Register() {
                         value={data.username}
                         onChangeText={(text) => setData({...data, username: text})}
                         placeholder="Enter username"
+                        autoCapitalize="none"
+                    />
+                </View>
+
+                {/* Email */}
+                <View className="mb-4">
+                    <Text className="text-sm font-semibold text-indigo-500 mb-2">Email</Text>
+                    <TextInput 
+                        className="border-b-2 border-indigo-500 py-2 text-gray-800"
+                        value={data.email}
+                        onChangeText={(text) => setData({...data, email: text})}
+                        placeholder="Enter email"
+                        keyboardType="email-address"
                         autoCapitalize="none"
                     />
                 </View>

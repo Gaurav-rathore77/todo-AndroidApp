@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, ScrollView, Modal } from "react-native";
+import { Text, TouchableOpacity, View, ScrollView, Modal, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { useUserStore } from "../store/user";
 import { useState } from "react";
@@ -43,11 +43,19 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
           }}
         >
           <View className="bg-indigo-600 p-6 rounded-t-3xl flex-row justify-between items-center">
-            <View>
-              <Text className="text-white text-xl font-bold">
-                {user ? `👤 ${user.username}` : "My App"}
-              </Text>
-              <Text className="text-indigo-200 text-sm mt-1">{user ? "Logged In" : "Guest"}</Text>
+            <View className="flex-row items-center flex-1">
+              {user?.profileImage && (
+                <Image 
+                  source={{ uri: user.profileImage }} 
+                  className="w-12 h-12 rounded-full mr-3"
+                />
+              )}
+              <View className="flex-1">
+                <Text className="text-white text-xl font-bold">
+                  {user ? user.username : "My App"}
+                </Text>
+                <Text className="text-indigo-200 text-sm mt-1">{user ? "Logged In" : "Guest"}</Text>
+              </View>
             </View>
             <TouchableOpacity onPress={onClose}><Text className="text-white text-2xl">✕</Text></TouchableOpacity>
           </View>

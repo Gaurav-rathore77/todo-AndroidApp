@@ -4,6 +4,7 @@ import { loginApi } from "../../api/auth";
 interface User {
   id: string;
   username: string;
+  email?: string;
   profileImage?: string;
 }
 
@@ -14,6 +15,7 @@ interface UserState {
   error: string | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -43,5 +45,11 @@ export const useUserStore = create<UserState>((set) => ({
   logout: () => {
     console.log("🌐 Web logout");
     set({ user: null, token: null, error: null });
+  },
+
+  updateUser: (userData: Partial<User>) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, ...userData } : null
+    }));
   },
 }));

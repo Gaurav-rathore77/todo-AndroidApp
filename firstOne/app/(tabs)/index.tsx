@@ -1,4 +1,4 @@
-import { Text, Pressable, View, ScrollView, Modal } from "react-native";
+import { Text, Pressable, View, ScrollView, Modal, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { useUserStore } from "../store/user";
 import { useState } from "react";
@@ -52,13 +52,21 @@ function Sidebar({ visible, onClose }: { visible: boolean; onClose: () => void }
         >
           {/* Header */}
           <View className="bg-indigo-600 p-6 rounded-t-3xl flex-row justify-between items-center">
-            <View>
-              <Text className="text-white text-xl font-bold">
-                {user ? `👤 ${user.username}` : "My App"}
-              </Text>
-              <Text className="text-indigo-200 text-sm mt-1">
-                {user ? "Logged In" : "Guest User"}
-              </Text>
+            <View className="flex-row items-center flex-1">
+              {user?.profileImage && (
+                <Image 
+                  source={{ uri: user.profileImage }} 
+                  className="w-12 h-12 rounded-full mr-3"
+                />
+              )}
+              <View className="flex-1">
+                <Text className="text-white text-xl font-bold">
+                  {user ? user.username : "My App"}
+                </Text>
+                <Text className="text-indigo-200 text-sm mt-1">
+                  {user ? "Logged In" : "Guest User"}
+                </Text>
+              </View>
             </View>
             <Pressable onPress={onClose}>
               <Text className="text-white text-2xl">✕</Text>
@@ -144,7 +152,7 @@ export default function HomeTab() {
         {!user && (
           <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
             <Text className="text-lg font-bold text-gray-800 mb-2">
-              👋 Welcome Guest!
+              Welcome Guest!
             </Text>
             <Text className="text-gray-600 mb-3">
               You can browse all products and view details without logging in.
@@ -169,7 +177,7 @@ export default function HomeTab() {
         {/* Product Section */}
         <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
           <Text className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">
-            📦 Products
+            Products
           </Text>
           <Text className="text-gray-600 mb-3">
             Browse and view all available products
@@ -202,7 +210,7 @@ export default function HomeTab() {
         {/* Info Section */}
         <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
           <Text className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">
-            ℹ️ Info
+               Info
           </Text>
           <Pressable
               className="bg-gray-600 px-4 py-3 rounded-lg w-full mb-3"
