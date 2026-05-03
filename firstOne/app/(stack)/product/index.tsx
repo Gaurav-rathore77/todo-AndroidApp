@@ -5,97 +5,61 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { TextInput } from "react-native";
-import { uploadImageFromUri } from "../../api/image";
-import { useUserStore } from "../../store/user";
-
-// No AsyncStorage - using mock data
-
-interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    description?: string;
-    image?: string;
-}
+import { uploadImageFromUriFixed } from "../../../api/image-fixed";
+import { useUserStore } from "../../store/user.native";
+import { Product } from "../../../api/productService";
+import { useProducts } from "../../../hooks/useProducts";
+import { ErrorBoundary, LoadingSpinner, EmptyState } from "../../../components/ErrorBoundary";
 
 export default function Index() {
-    const [data, setData] = useState<Product[]>([]);
+    const router = useRouter();
+    
+    // Form state
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [uploading, setUploading] = useState(false);
-    const router = useRouter();
-    const token = useUserStore((state: any) => state.token);
+    
+    // Global state with proper error handling
+    const { 
+        products, 
+        loading, 
+        error, 
+        createProduct, 
+        retry,
+        clearError 
+    } = useProducts();
 
-    const handleBack = () => {
-        router.push("/");
-    };
-
-    const fetchProducts = async () => {
-        try {
-            const response = await fetch("http://localhost:3000/product/all", {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const products = await response.json();
-            setData(products);
-        } catch (error) {
-            console.error("Fetch error:", error);
-            // Fallback to mock data if backend fails
-            const mockProducts: Product[] = [
-                { _id: "1", name: "Mock Product 1", price: 100, description: "Test product" },
-                { _id: "2", name: "Mock Product 2", price: 200, description: "Another test" }
-            ];
-            setData(mockProducts);
-        }
-    };
+    const handleBack = () => router.push("/");
 
     const handleSubmitForm = async () => {
+        if (!name.trim() || !price.trim()) {
+            Alert.alert('Validation Error', 'Please fill in all required fields');
+            return;
+        }
+
         try {
-            const imageUrl = await uploadProductImage();
-            
-            const response = await fetch("http://localhost:3000/product/create", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    name,
-                    price: Number(price),
-                    description,
-                    image: imageUrl
-                })
-            });
-            
-            if (response.ok) {
-                // Refresh products list
-                fetchProducts();
-                // Clear form
-                setName("");
-                setPrice("");
-                setDescription("");
-                setSelectedImage(null);
-            } else {
-                throw new Error('Failed to create product');
+            // Upload image first if selected
+            let imageUrl: string | undefined;
+            if (selectedImage) {
+                const uploadedUrl = await uploadProductImage();
+                imageUrl = uploadedUrl || undefined;
             }
-        } catch (error) {
-            console.error('Submit error:', error);
-            // Fallback: add to local state
-            const newProduct: Product = {
-                _id: Date.now().toString(),
-                name,
+
+            // Create product using global state
+            await createProduct({
+                name: name.trim(),
                 price: Number(price),
-                description,
-                image: await uploadProductImage() || undefined
-            };
-            setData(prev => [...prev, newProduct]);
-            setName("");
-            setPrice("");
-            setDescription("");
-            setSelectedImage(null);
+                description: description.trim(),
+                image: imageUrl,
+            });
+
+            // Clear form on success
+            resetForm();
+            Alert.alert('Success', 'Product added successfully!');
+        } catch (err) {
+            // Error is already handled by global state
+            console.error('Submit error:', err);
         }
     };
 
@@ -107,7 +71,7 @@ export default function Index() {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         
         if (permissionResult.granted === false) {
-            Alert.alert('Permission to access camera roll is required!');
+            Alert.alert('Permission Required', 'Please allow access to camera roll');
             return;
         }
 
@@ -123,25 +87,25 @@ export default function Index() {
         }
     };
 
-    const uploadProductImage = async () => {
+    const uploadProductImage = async (): Promise<string | null> => {
         if (!selectedImage) return null;
         
-        setUploading(true);
         try {
             const fileName = `product-${Date.now()}.jpg`;
-            const imageUrl = await uploadImageFromUri(selectedImage, fileName, 'products');
+            const imageUrl = await uploadImageFromUriFixed(selectedImage, fileName, 'products');
             return imageUrl;
         } catch (error) {
             Alert.alert('Upload Failed', 'Failed to upload image. Please try again.');
             return null;
-        } finally {
-            setUploading(false);
         }
     };
 
-    useEffect(() => {
-        fetchProducts();
-    }, []);
+    const resetForm = () => {
+        setName("");
+        setPrice("");
+        setDescription("");
+        setSelectedImage(null);
+    };
 
     return (
         <View className="flex-1 bg-white p-4">
@@ -197,39 +161,49 @@ export default function Index() {
                     numberOfLines={2}
                 />
 
-                <Button onPress={handleSubmitForm} disabled={uploading}>
-                    {uploading ? 'Uploading...' : 'Add Product'}
+                <Button onPress={handleSubmitForm} disabled={loading}>
+                    {loading ? 'Uploading...' : 'Add Product'}
                 </Button>
             </View>
 
-            {/* Products List */}
-            <Text className="text-lg font-bold text-gray-800 mb-3">Your Products</Text>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item._id}
-                ListEmptyComponent={
-                    <Text className="text-gray-500 text-center mt-4">No products yet. Add your first product above!</Text>
-                }
-                renderItem={({ item }: { item: Product }) => (
-                    <TouchableOpacity
-                        onPress={() => handleProductClick(item._id)}
-                        className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm"
-                    >
-                        <View className="flex-row items-center">
-                            {item.image && (
-                                <Image source={{ uri: item.image }} className="w-16 h-16 rounded-lg mr-3" />
-                            )}
-                            <View className="flex-1">
-                                <Text className="text-lg font-semibold text-gray-800">{item.name}</Text>
-                                {item.description && (
-                                    <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>{item.description}</Text>
+            {/* Error Boundary */}
+            <ErrorBoundary 
+                error={error}
+                onRetry={retry}
+                onDismiss={clearError}
+            >
+                {/* Products List */}
+                <Text className="text-lg font-bold text-gray-800 mb-3">Your Products</Text>
+                <FlatList
+                    data={products}
+                    keyExtractor={(item: Product) => item._id}
+                    ListEmptyComponent={
+                        <EmptyState 
+                            title="No products yet" 
+                            description="Add your first product above!" 
+                        />
+                    }
+                    renderItem={({ item }: { item: Product }) => (
+                        <TouchableOpacity
+                            onPress={() => handleProductClick(item._id)}
+                            className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm"
+                        >
+                            <View className="flex-row items-center">
+                                {item.image && (
+                                    <Image source={{ uri: item.image }} className="w-16 h-16 rounded-lg mr-3" />
                                 )}
+                                <View className="flex-1">
+                                    <Text className="text-lg font-semibold text-gray-800">{item.name}</Text>
+                                    {item.description && (
+                                        <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>{item.description}</Text>
+                                    )}
+                                </View>
+                                <Text className="text-lg font-bold text-green-600">₹{item.price}</Text>
                             </View>
-                            <Text className="text-lg font-bold text-green-600">₹{item.price}</Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
+                        </TouchableOpacity>
+                    )}
+                />
+            </ErrorBoundary>
         </View>
     );
 }

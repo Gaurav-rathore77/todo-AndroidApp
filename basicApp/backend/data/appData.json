@@ -1,0 +1,496 @@
+{
+  "appInfo": {
+    "name": "Basic App",
+    "type": "React Native Expo Application with Authentication",
+    "description": "Complete authentication system with JWT tokens, form validation, and MongoDB backend. Includes login, signup, protected routes, and user management.",
+    "features": [
+      "JWT Authentication",
+      "Form Validation",
+      "Protected Routes",
+      "User Management",
+      "MongoDB Integration",
+      "React Native Navigation"
+    ],
+    "dependencies": [
+      "@expo/vector-icons",
+      "@react-native-async-storage/async-storage",
+      "@react-navigation/bottom-tabs",
+      "@react-navigation/elements",
+      "@react-navigation/native",
+      "axios",
+      "babel-preset-expo",
+      "expo",
+      "expo-constants",
+      "expo-font",
+      "expo-haptics",
+      "expo-image",
+      "expo-linking",
+      "expo-router",
+      "expo-splash-screen",
+      "expo-status-bar",
+      "expo-symbols",
+      "expo-system-ui",
+      "expo-web-browser",
+      "nativewind",
+      "prettier-plugin-tailwindcss",
+      "react",
+      "react-dom",
+      "react-native",
+      "react-native-gesture-handler",
+      "react-native-reanimated",
+      "react-native-safe-area-context",
+      "react-native-screens",
+      "react-native-web",
+      "react-native-worklets",
+      "tailwindcss"
+    ],
+    "devDependencies": [
+      "@types/react",
+      "eslint",
+      "eslint-config-expo",
+      "typescript"
+    ]
+  },
+  "components": [],
+  "apiEndpoints": [
+    {
+      "method": "POST",
+      "path": "/signup",
+      "file": "auth.js",
+      "description": "No description available"
+    },
+    {
+      "method": "POST",
+      "path": "/login",
+      "file": "auth.js",
+      "description": "No description available"
+    },
+    {
+      "method": "GET",
+      "path": "/me",
+      "file": "auth.js",
+      "description": "No description available"
+    },
+    {
+      "method": "POST",
+      "path": "/ask",
+      "file": "rag.js",
+      "description": "Ask a question about the app"
+    },
+    {
+      "method": "GET",
+      "path": "/overview",
+      "file": "rag.js",
+      "description": "Get app overview"
+    },
+    {
+      "method": "POST",
+      "path": "/search",
+      "file": "rag.js",
+      "description": "Search documents"
+    },
+    {
+      "method": "POST",
+      "path": "/reindex",
+      "file": "rag.js",
+      "description": "Reindex data (admin endpoint)"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "file": "rag.js",
+      "description": "Get system status"
+    },
+    {
+      "method": "POST",
+      "path": "/chat",
+      "file": "simpleChat.js",
+      "description": "Chat endpoint"
+    },
+    {
+      "method": "GET",
+      "path": "/app-info",
+      "file": "simpleChat.js",
+      "description": "Get app info"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "file": "simpleChat.js",
+      "description": "Health check"
+    },
+    {
+      "method": "GET",
+      "path": "/test",
+      "file": "simpleChat.js",
+      "description": "Simple test endpoint"
+    }
+  ],
+  "codeStructure": [
+    {
+      "type": "directory",
+      "name": "(app)",
+      "path": "app\\(app)",
+      "children": [
+        {
+          "type": "file",
+          "name": "chat.tsx",
+          "path": "app\\(app)\\chat.tsx",
+          "size": 8830,
+          "language": "React TSX",
+          "preview": "import React, { useState, useEffect } from 'react';\nimport {\n  View,\n  Text,\n  TextInput,\n  TouchableOpacity,\n  FlatList,\n  ScrollView,\n  KeyboardAvoidingView,\n  Platform,\n  ActivityIndicator,\n  Alert\n} from 'react-native';\nimport { SafeAreaView } from 'react-native-safe-area-context';\n\ninterface Message {\n  id: string;\n  role: 'user' | 'assistant';\n  content: string;\n  timestamp: string;\n  sources?: Array<{\n    content: string;\n    similarity: number;\n    metadata: any;\n  }>;\n}\n\ninterface ChatS..."
+        },
+        {
+          "type": "directory",
+          "name": "follow-ups",
+          "path": "app\\(app)\\follow-ups",
+          "children": [
+            {
+              "type": "file",
+              "name": "index.tsx",
+              "path": "app\\(app)\\follow-ups\\index.tsx",
+              "size": 5059,
+              "language": "React TSX",
+              "preview": "import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';\nimport { useCallback, useEffect, useState } from 'react';\nimport { useRouter } from 'expo-router';\nimport { Ionicons } from '@expo/vector-icons';\nimport { crmAPI } from '../../../services/crmApi';\nimport { FollowUp, FollowUpStatus } from '../../../types/crm';\nimport { FollowUpCard, EmptyState } from '../../../components/crm';\nimport { Alert } from 'react-native';\n\nexport default function FollowUpsScreen() {\n  ..."
+            },
+            {
+              "type": "file",
+              "name": "_layout.tsx",
+              "path": "app\\(app)\\follow-ups\\_layout.tsx",
+              "size": 266,
+              "language": "React TSX",
+              "preview": "import { Stack } from 'expo-router';\n\nexport default function FollowUpsLayout() {\n  return (\n    <Stack>\n      <Stack.Screen\n        name=\"index\"\n        options={{\n          title: 'Follow-ups',\n          headerShown: false,\n        }}\n      />\n    </Stack>\n  );\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "file",
+          "name": "index.tsx",
+          "path": "app\\(app)\\index.tsx",
+          "size": 7280,
+          "language": "React TSX",
+          "preview": "import { View, Text, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';\nimport { useCallback, useEffect, useState } from 'react';\nimport { useAuth } from '../../context/AuthContext';\nimport { crmAPI } from '../../services/crmApi';\nimport { DashboardStats, Activity, Lead } from '../../types/crm';\nimport { StatCard, ActivityItem, LeadCard, EmptyState } from '../../components/crm';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useRouter } from 'expo-router';\n\nexport defau..."
+        },
+        {
+          "type": "directory",
+          "name": "leads",
+          "path": "app\\(app)\\leads",
+          "children": [
+            {
+              "type": "file",
+              "name": "index.tsx",
+              "path": "app\\(app)\\leads\\index.tsx",
+              "size": 5818,
+              "language": "React TSX",
+              "preview": "import { View, Text, FlatList, TouchableOpacity, RefreshControl, TextInput, ScrollView } from 'react-native';\nimport { useCallback, useEffect, useState } from 'react';\nimport { useRouter } from 'expo-router';\nimport { Ionicons } from '@expo/vector-icons';\nimport { crmAPI } from '../../../services/crmApi';\nimport { Lead, LeadStatus, LEAD_STATUSES } from '../../../types/crm';\nimport { LeadCard, EmptyState } from '../../../components/crm';\n\nexport default function LeadsScreen() {\n  const router = u..."
+            },
+            {
+              "type": "file",
+              "name": "new.tsx",
+              "path": "app\\(app)\\leads\\new.tsx",
+              "size": 5956,
+              "language": "React TSX",
+              "preview": "import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';\nimport { useState } from 'react';\nimport { useRouter } from 'expo-router';\nimport { Ionicons } from '@expo/vector-icons';\nimport { crmAPI, CreateLeadData } from '../../../services/crmApi';\nimport { LEAD_SOURCES, LeadSource, LeadStatus, LEAD_STATUSES } from '../../../types/crm';\n\nexport default function NewLeadScreen() {\n  const router = useRouter();\n  const [loading, setLoading] = useState(false);\n  const ..."
+            },
+            {
+              "type": "file",
+              "name": "_layout.tsx",
+              "path": "app\\(app)\\leads\\_layout.tsx",
+              "size": 426,
+              "language": "React TSX",
+              "preview": "import { Stack } from 'expo-router';\n\nexport default function LeadsLayout() {\n  return (\n    <Stack>\n      <Stack.Screen\n        name=\"index\"\n        options={{\n          title: 'Leads',\n          headerShown: false,\n        }}\n      />\n      <Stack.Screen\n        name=\"new\"\n        options={{\n          title: 'New Lead',\n          presentation: 'modal',\n          headerShown: true,\n        }}\n      />\n    </Stack>\n  );\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "file",
+          "name": "profile.tsx",
+          "path": "app\\(app)\\profile.tsx",
+          "size": 3968,
+          "language": "React TSX",
+          "preview": "import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';\nimport { useAuth } from '../../context/AuthContext';\nimport { Ionicons } from '@expo/vector-icons';\n\nexport default function ProfileScreen() {\n  const { user, logout } = useAuth();\n\n  const handleLogout = async () => {\n    Alert.alert(\n      'Logout',\n      'Are you sure you want to logout?',\n      [\n        { text: 'Cancel', style: 'cancel' },\n        { \n          text: 'Logout', \n          style: 'destructive',\n   ..."
+        },
+        {
+          "type": "file",
+          "name": "_layout.tsx",
+          "path": "app\\(app)\\_layout.tsx",
+          "size": 1657,
+          "language": "React TSX",
+          "preview": "import { Tabs } from 'expo-router';\nimport { Ionicons } from '@expo/vector-icons';\n\nexport default function AppLayout() {\n  return (\n    <Tabs\n      screenOptions={{\n        tabBarActiveTintColor: '#3B82F6',\n        tabBarInactiveTintColor: '#9CA3AF',\n        tabBarStyle: {\n          borderTopWidth: 1,\n          borderTopColor: '#E5E7EB',\n          paddingTop: 5,\n          paddingBottom: 5,\n          height: 60,\n        },\n        headerShown: false,\n      }}\n    >\n      <Tabs.Screen\n        nam..."
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "index.tsx",
+      "path": "app\\index.tsx",
+      "size": 331,
+      "language": "React TSX",
+      "preview": "import { Text, View } from \"react-native\";\n\nexport default function Index() {\n  return (\n    <View\n      style={{\n        flex: 1,\n        justifyContent: \"center\",\n        alignItems: \"center\",\n      }}\n    >\n      <Text className=\"text-2xl font-bold bg-red-500\" >Edit app/index.tsx to edit this screen.</Text>\n    </View>\n  );\n}\n"
+    },
+    {
+      "type": "file",
+      "name": "login.tsx",
+      "path": "app\\login.tsx",
+      "size": 4852,
+      "language": "React TSX",
+      "preview": "import React, { useState } from 'react';\nimport {\n  View,\n  Text,\n  TextInput,\n  TouchableOpacity,\n  ActivityIndicator,\n  KeyboardAvoidingView,\n  Platform,\n  ScrollView,\n} from 'react-native';\nimport { Link, useRouter, Href } from 'expo-router';\nimport { useAuth } from '../context/AuthContext';\n\ninterface FormErrors {\n  email?: string;\n  password?: string;\n}\n\nexport default function Login() {\n  const [email, setEmail] = useState('');\n  const [password, setPassword] = useState('');\n  const [formE..."
+    },
+    {
+      "type": "file",
+      "name": "signup.tsx",
+      "path": "app\\signup.tsx",
+      "size": 6848,
+      "language": "React TSX",
+      "preview": "import React, { useState } from 'react';\nimport {\n  View,\n  Text,\n  TextInput,\n  TouchableOpacity,\n  ActivityIndicator,\n  KeyboardAvoidingView,\n  Platform,\n  ScrollView,\n} from 'react-native';\nimport { Link, useRouter } from 'expo-router';\nimport { useAuth } from '../context/AuthContext';\n\ninterface FormErrors {\n  name?: string;\n  email?: string;\n  password?: string;\n  confirmPassword?: string;\n}\n\nexport default function Signup() {\n  const [name, setName] = useState('');\n  const [email, setEmail..."
+    },
+    {
+      "type": "file",
+      "name": "test-api.tsx",
+      "path": "app\\test-api.tsx",
+      "size": 2907,
+      "language": "React TSX",
+      "preview": "import React, { useState } from 'react';\nimport { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';\n\nexport default function TestAPI() {\n  const [email, setEmail] = useState('test3@example.com');\n  const [password, setPassword] = useState('123456');\n  const [name, setName] = useState('Test User');\n  const [loading, setLoading] = useState(false);\n\n  const testSignup = async () => {\n    setLoading(true);\n    try {\n      const response = await fetch('http://192.168.56.1:5003/api..."
+    },
+    {
+      "type": "file",
+      "name": "_layout.tsx",
+      "path": "app\\_layout.tsx",
+      "size": 963,
+      "language": "React TSX",
+      "preview": "import { Stack, useRouter, useSegments, Href } from \"expo-router\";\nimport { useEffect } from \"react\";\nimport \"../global.css\";\nimport { AuthProvider, useAuth } from \"../context/AuthContext\";\n\nfunction RootLayoutNav() {\n  const { isAuthenticated, isLoading } = useAuth();\n  const segments = useSegments();\n  const router = useRouter();\n\n  useEffect(() => {\n    if (isLoading) return;\n\n    const inAuthGroup = segments[0] === \"(app)\";\n\n    if (isAuthenticated && !inAuthGroup) {\n      router.replace(\"/(..."
+    },
+    {
+      "type": "file",
+      "name": ".env",
+      "path": "backend\\.env",
+      "size": 202,
+      "language": "Unknown",
+      "preview": "[Binary file: ]"
+    },
+    {
+      "type": "file",
+      "name": ".env.example",
+      "path": "backend\\.env.example",
+      "size": 134,
+      "language": "Unknown",
+      "preview": "[Binary file: .example]"
+    },
+    {
+      "type": "directory",
+      "name": "config",
+      "path": "backend\\config",
+      "children": [
+        {
+          "type": "file",
+          "name": "db.js",
+          "path": "backend\\config\\db.js",
+          "size": 331,
+          "language": "JavaScript",
+          "preview": "const mongoose = require('mongoose');\n\nconst connectDB = async () => {\n  try {\n    const conn = await mongoose.connect(process.env.MONGODB_URI);\n    console.log(`MongoDB Connected: ${conn.connection.host}`);\n  } catch (error) {\n    console.error(`Error: ${error.message}`);\n    process.exit(1);\n  }\n};\n\nmodule.exports = connectDB;\n"
+        }
+      ]
+    },
+    {
+      "type": "directory",
+      "name": "controllers",
+      "path": "backend\\controllers",
+      "children": [
+        {
+          "type": "file",
+          "name": "authController.js",
+          "path": "backend\\controllers\\authController.js",
+          "size": 2818,
+          "language": "JavaScript",
+          "preview": "const User = require('../models/User');\nconst jwt = require('jsonwebtoken');\nconst { validationResult } = require('express-validator');\n\nconst generateToken = (userId) => {\n  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {\n    expiresIn: process.env.JWT_EXPIRE || '7d'\n  });\n};\n\nexports.signup = async (req, res) => {\n  try {\n    const errors = validationResult(req);\n    if (!errors.isEmpty()) {\n      return res.status(400).json({\n        success: false,\n        message: 'Validation fail..."
+        }
+      ]
+    },
+    {
+      "type": "directory",
+      "name": "data",
+      "path": "backend\\data",
+      "children": [
+        {
+          "type": "file",
+          "name": "appData.json",
+          "path": "backend\\data\\appData.json",
+          "size": 29189,
+          "language": "JSON",
+          "preview": "{\n  \"appInfo\": {\n    \"name\": \"Basic App\",\n    \"type\": \"React Native Expo Application with Authentication\",\n    \"description\": \"Complete authentication system with JWT tokens, form validation, and MongoDB backend. Includes login, signup, protected routes, and user management.\",\n    \"features\": [\n      \"JWT Authentication\",\n      \"Form Validation\",\n      \"Protected Routes\",\n      \"User Management\",\n      \"MongoDB Integration\",\n      \"React Native Navigation\"\n    ],\n    \"dependencies\": [\n      \"@ex..."
+        },
+        {
+          "type": "file",
+          "name": "knowledgeBase.json",
+          "path": "backend\\data\\knowledgeBase.json",
+          "size": 11792,
+          "language": "JSON",
+          "preview": "{\n  \"categories\": {\n    \"basic\": {\n      \"title\": \"Basic App Information\",\n      \"questions\": [\n        {\n          \"keywords\": [\"what is this app\", \"kya karta hai app\", \"app kya hai\", \"what is app\", \"ye app kya hai\", \"app ka kaam\", \"app kya karti hai\", \"what does this app do\", \"app ka purpose\", \"app information\"],\n          \"question\": \"What is this app?\",\n          \"answer\": \"This is a React Native Expo Application with Authentication. It provides complete authentication system with JWT tokens..."
+        },
+        {
+          "type": "file",
+          "name": "vectors.json",
+          "path": "backend\\data\\vectors.json",
+          "size": 95050,
+          "language": "JSON",
+          "preview": "{\n  \"documents\": [\n    {\n      \"id\": \"1777748051797\",\n      \"content\": \"App Name: Basic App. Type: React Native Expo Application. Description: A mobile application built with Expo, React Native, and Node.js backend.\",\n      \"metadata\": {\n        \"type\": \"appInfo\",\n        \"source\": \"scraped\"\n      },\n      \"createdAt\": \"2026-05-02T18:54:11.797Z\"\n    },\n    {\n      \"id\": \"1777748051799\",\n      \"content\": \"API Endpoint: POST /signup. Description: No description available. File: auth.js.\",\n      \"m..."
+        }
+      ]
+    },
+    {
+      "type": "directory",
+      "name": "middleware",
+      "path": "backend\\middleware",
+      "children": [
+        {
+          "type": "file",
+          "name": "auth.js",
+          "path": "backend\\middleware\\auth.js",
+          "size": 694,
+          "language": "JavaScript",
+          "preview": "const jwt = require('jsonwebtoken');\nconst User = require('../models/User');\n\nexports.protect = async (req, res, next) => {\n  let token;\n\n  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {\n    token = req.headers.authorization.split(' ')[1];\n  }\n\n  if (!token) {\n    return res.status(401).json({\n      success: false,\n      message: 'Not authorized to access this route'\n    });\n  }\n\n  try {\n    const decoded = jwt.verify(token, process.env.JWT_SECRET);\n    req.us..."
+        }
+      ]
+    },
+    {
+      "type": "directory",
+      "name": "models",
+      "path": "backend\\models",
+      "children": [
+        {
+          "type": "file",
+          "name": "User.js",
+          "path": "backend\\models\\User.js",
+          "size": 1044,
+          "language": "JavaScript",
+          "preview": "const mongoose = require('mongoose');\nconst bcrypt = require('bcryptjs');\n\nconst userSchema = new mongoose.Schema({\n  name: {\n    type: String,\n    required: [true, 'Name is required'],\n    trim: true,\n    minlength: [2, 'Name must be at least 2 characters']\n  },\n  email: {\n    type: String,\n    required: [true, 'Email is required'],\n    unique: true,\n    lowercase: true,\n    trim: true,\n    match: [/^\\S+@\\S+\\.\\S+$/, 'Please enter a valid email']\n  },\n  password: {\n    type: String,\n    required..."
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "package-lock.json",
+      "path": "backend\\package-lock.json",
+      "size": 89169,
+      "language": "JSON",
+      "preview": "{\n  \"name\": \"auth-backend\",\n  \"version\": \"1.0.0\",\n  \"lockfileVersion\": 3,\n  \"requires\": true,\n  \"packages\": {\n    \"\": {\n      \"name\": \"auth-backend\",\n      \"version\": \"1.0.0\",\n      \"dependencies\": {\n        \"@google/generative-ai\": \"^0.24.1\",\n        \"axios\": \"^1.16.0\",\n        \"bcryptjs\": \"^2.4.3\",\n        \"cheerio\": \"^1.2.0\",\n        \"cors\": \"^2.8.5\",\n        \"dotenv\": \"^16.3.1\",\n        \"express\": \"^4.18.2\",\n        \"express-validator\": \"^7.0.1\",\n        \"faiss-node\": \"^0.5.1\",\n        \"json..."
+    },
+    {
+      "type": "file",
+      "name": "package.json",
+      "path": "backend\\package.json",
+      "size": 609,
+      "language": "JSON",
+      "preview": "{\n  \"name\": \"auth-backend\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Authentication API with Node.js, Express, MongoDB\",\n  \"main\": \"server.js\",\n  \"scripts\": {\n    \"start\": \"node server.js\",\n    \"dev\": \"nodemon server.js\"\n  },\n  \"dependencies\": {\n    \"@google/generative-ai\": \"^0.24.1\",\n    \"axios\": \"^1.16.0\",\n    \"bcryptjs\": \"^2.4.3\",\n    \"cheerio\": \"^1.2.0\",\n    \"cors\": \"^2.8.5\",\n    \"dotenv\": \"^16.3.1\",\n    \"express\": \"^4.18.2\",\n    \"express-validator\": \"^7.0.1\",\n    \"faiss-node\": \"^0.5.1\",\n    ..."
+    },
+    {
+      "type": "file",
+      "name": "RAG_README.md",
+      "path": "backend\\RAG_README.md",
+      "size": 5007,
+      "language": "Markdown",
+      "preview": "# RAG System Implementation\n\nThis directory contains a complete RAG (Retrieval-Augmented Generation) system for your mobile app using Gemini API.\n\n## Features\n\n- **Web Scraping**: Automatically scrapes app documentation, components, and API endpoints\n- **Vector Database**: Stores and indexes app information for efficient retrieval\n- **Smart Chat**: AI-powered assistant that can answer questions about your app\n- **Context-Aware**: Uses RAG to provide accurate answers based on your app's actual co..."
+    },
+    {
+      "type": "directory",
+      "name": "routes",
+      "path": "backend\\routes",
+      "children": [
+        {
+          "type": "file",
+          "name": "auth.js",
+          "path": "backend\\routes\\auth.js",
+          "size": 954,
+          "language": "JavaScript",
+          "preview": "const express = require('express');\nconst { body } = require('express-validator');\nconst { signup, login, getMe } = require('../controllers/authController');\nconst { protect } = require('../middleware/auth');\n\nconst router = express.Router();\n\nconst signupValidation = [\n  body('name')\n    .trim()\n    .isLength({ min: 2 })\n    .withMessage('Name must be at least 2 characters'),\n  body('email')\n    .isEmail()\n    .normalizeEmail()\n    .withMessage('Please enter a valid email'),\n  body('password')\n..."
+        },
+        {
+          "type": "file",
+          "name": "rag.js",
+          "path": "backend\\routes\\rag.js",
+          "size": 4151,
+          "language": "JavaScript",
+          "preview": "const express = require('express');\nconst { body, validationResult } = require('express-validator');\nconst RAGServiceDemo = require('../services/ragServiceDemo');\n\nconst router = express.Router();\nconst ragService = new RAGServiceDemo();\n\n// Initialize the RAG service when the module loads\nragService.initialize().catch(console.error);\n\n// Ask a question about the app\nrouter.post('/ask', [\n    body('question').trim().isLength({ min: 1, max: 500 }).withMessage('Question must be 1-500 characters'),..."
+        },
+        {
+          "type": "file",
+          "name": "simpleChat.js",
+          "path": "backend\\routes\\simpleChat.js",
+          "size": 2178,
+          "language": "JavaScript",
+          "preview": "const express = require('express');\nconst SimpleChatService = require('../services/simpleChatService');\n\nconst router = express.Router();\nconst chatService = new SimpleChatService();\n\n// Chat endpoint\nrouter.post('/chat', async (req, res) => {\n    try {\n        const { message, conversationHistory } = req.body;\n        \n        if (!message) {\n            return res.status(400).json({ error: 'Message is required' });\n        }\n\n        console.log('Processing message:', message);\n        \n      ..."
+        }
+      ]
+    },
+    {
+      "type": "directory",
+      "name": "scripts",
+      "path": "backend\\scripts",
+      "children": [
+        {
+          "type": "file",
+          "name": "updateKnowledgeBase.js",
+          "path": "backend\\scripts\\updateKnowledgeBase.js",
+          "size": 1220,
+          "language": "JavaScript",
+          "preview": "const fs = require('fs').promises;\nconst path = require('path');\n\n// Easy way to add new Q&A to knowledge base\nconst addNewQuestion = async (category, question, answer, keywords) => {\n    try {\n        const knowledgeBasePath = path.join(__dirname, '../data/knowledgeBase.json');\n        const knowledgeBase = JSON.parse(await fs.readFile(knowledgeBasePath, 'utf8'));\n        \n        // Add new question to category\n        if (knowledgeBase.categories[category]) {\n            knowledgeBase.categor..."
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "server.js",
+      "path": "backend\\server.js",
+      "size": 1227,
+      "language": "JavaScript",
+      "preview": "require('dotenv').config();\nconst express = require('express');\nconst cors = require('cors');\nconst connectDB = require('./config/db');\nconst authRoutes = require('./routes/auth');\nconst ragRoutes = require('./routes/rag');\nconst simpleChatRoutes = require('./routes/simpleChat');\n\nconst app = express();\n\nconnectDB();\n\napp.use(cors({\n  origin: ['http://localhost:8081', 'exp://10.225.255.35:8081', '*'],\n  credentials: true\n}));\n\n// Increase timeout and add request logging\napp.use((req, res, next) ..."
+    },
+    {
+      "type": "directory",
+      "name": "services",
+      "path": "backend\\services",
+      "children": [
+        {
+          "type": "file",
+          "name": "ragService.js",
+          "path": "backend\\services\\ragService.js",
+          "size": 6097,
+          "language": "JavaScript",
+          "preview": "const { GoogleGenerativeAI } = require('@google/generative-ai');\nconst WebScraper = require('./webScraper');\nconst VectorDB = require('./vectorDB');\n\nclass RAGService {\n    constructor() {\n        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);\n        this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });\n        this.webScraper = new WebScraper();\n        this.vectorDB = new VectorDB();\n        this.initialized = false;\n    }\n\n    async initialize() {\n     ..."
+        },
+        {
+          "type": "file",
+          "name": "ragServiceDemo.js",
+          "path": "backend\\services\\ragServiceDemo.js",
+          "size": 10029,
+          "language": "JavaScript",
+          "preview": "const WebScraper = require('./webScraper');\nconst VectorDB = require('./vectorDB');\n\nclass RAGServiceDemo {\n    constructor() {\n        this.webScraper = new WebScraper();\n        this.vectorDB = new VectorDB();\n        this.initialized = false;\n    }\n\n    async initialize() {\n        if (!this.initialized) {\n            await this.vectorDB.initialize();\n            \n            // Check if we have data, if not scrape and index\n            const stats = await this.vectorDB.getStats();\n          ..."
+        },
+        {
+          "type": "file",
+          "name": "simpleChatService.js",
+          "path": "backend\\services\\simpleChatService.js",
+          "size": 20483,
+          "language": "JavaScript",
+          "preview": "const { GoogleGenerativeAI } = require('@google/generative-ai');\nconst WebScraper = require('./webScraper');\nconst fs = require('fs').promises;\nconst path = require('path');\n\nclass SimpleChatService {\n    constructor() {\n        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);\n        this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });\n        this.webScraper = new WebScraper();\n        this.appData = null;\n        this.knowledgeBase = null;\n        this.in..."
+        },
+        {
+          "type": "file",
+          "name": "vectorDB.js",
+          "path": "backend\\services\\vectorDB.js",
+          "size": 7079,
+          "language": "JavaScript",
+          "preview": "const fs = require('fs').promises;\nconst path = require('path');\n\nclass VectorDB {\n    constructor() {\n        this.dataDir = path.join(__dirname, '../data');\n        this.vectorsFile = path.join(this.dataDir, 'vectors.json');\n        this.documents = [];\n        this.vectors = [];\n    }\n\n    async initialize() {\n        await this.ensureDataDir();\n        await this.loadVectors();\n    }\n\n    async ensureDataDir() {\n        try {\n            await fs.access(this.dataDir);\n        } catch {\n     ..."
+        },
+        {
+          "type": "file",
+          "name": "webScraper.js",
+          "path": "backend\\services\\webScraper.js",
+          "size": 14236,
+          "language": "JavaScript",
+          "preview": "const axios = require('axios');\nconst cheerio = require('cheerio');\nconst fs = require('fs').promises;\nconst path = require('path');\n\nclass WebScraper {\n    constructor() {\n        this.dataDir = path.join(__dirname, '../data');\n        this.ensureDataDir();\n    }\n\n    async ensureDataDir() {\n        try {\n            await fs.access(this.dataDir);\n        } catch {\n            await fs.mkdir(this.dataDir, { recursive: true });\n        }\n    }\n\n    async scrapeAppDocumentation() {\n        const ..."
+        }
+      ]
+    }
+  ]
+}

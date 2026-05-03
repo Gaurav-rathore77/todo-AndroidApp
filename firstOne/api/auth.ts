@@ -3,7 +3,8 @@ import { IP_ADDRESS } from '../app/config/ip';
 
 // Auto-generate URLs from centralized IP
 const API_URLS = [
-  `http://${IP_ADDRESS}:3000`,  
+  `http://${IP_ADDRESS}:3000`,
+//   `http://localhost:3000`,  
         
 ];
 
@@ -30,7 +31,7 @@ export const loginApi = async (credentials: LoginRequest): Promise<LoginResponse
     // Try each URL until one works
     for (const apiUrl of API_URLS) {
         try {
-            console.log(`🔍 Trying login API: ${apiUrl}`);
+            console.log(`Trying login API: ${apiUrl}`);
             const response = await fetch(`${apiUrl}/user/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -43,10 +44,10 @@ export const loginApi = async (credentials: LoginRequest): Promise<LoginResponse
                 throw new Error(data.error || 'Login failed');
             }
 
-            console.log(`✅ Login API working: ${apiUrl}`);
+            console.log(`Login API working: ${apiUrl}`);
             return data;
         } catch (error) {
-            console.log(`❌ Failed to connect to ${apiUrl}:`, error instanceof Error ? error.message : 'Unknown error');
+            console.log(` Failed to connect to ${apiUrl}:`, error instanceof Error ? error.message : 'Unknown error');
             lastError = error instanceof Error ? error : new Error('Unknown error');
             continue;
         }
@@ -61,7 +62,7 @@ export const registerApi = async (credentials: LoginRequest): Promise<LoginRespo
     // Try each URL until one works
     for (const apiUrl of API_URLS) {
         try {
-            console.log(`🔍 Trying register API: ${apiUrl}`);
+            console.log(`Trying register API: ${apiUrl}`);
             const response = await fetch(`${apiUrl}/user/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -74,10 +75,10 @@ export const registerApi = async (credentials: LoginRequest): Promise<LoginRespo
                 throw new Error(data.error || 'Registration failed');
             }
 
-            console.log(`✅ Register API working: ${apiUrl}`);
+            console.log(`Register API working: ${apiUrl}`);
             return data;
         } catch (error) {
-            console.log(`❌ Failed to connect to ${apiUrl}:`, error instanceof Error ? error.message : 'Unknown error');
+            console.log(`Failed to connect to ${apiUrl}:`, error instanceof Error ? error.message : 'Unknown error');
             lastError = error instanceof Error ? error : new Error('Unknown error');
             continue;
         }

@@ -1,0 +1,181 @@
+{
+  "categories": {
+    "basic": {
+      "title": "Basic App Information",
+      "questions": [
+        {
+          "keywords": ["what is this app", "kya karta hai app", "app kya hai", "what is app", "ye app kya hai", "app ka kaam", "app kya karti hai", "what does this app do", "app ka purpose", "app information"],
+          "question": "What is this app?",
+          "answer": "This is a React Native Expo Application with Authentication. It provides complete authentication system with JWT tokens, form validation, and MongoDB backend. Includes login, signup, protected routes, and user management."
+        },
+        {
+          "keywords": ["features", "main features", "kya features hain", "app ke features", "app mein kya hai", "app ki speciality", "app capabilities", "kya kya hai app mein"],
+          "question": "What are the main features?",
+          "answer": "Main features hain: JWT Authentication, Form Validation, Protected Routes, User Management, MongoDB Integration, React Native Navigation, Secure API endpoints, Error handling, Responsive UI."
+        },
+        {
+          "keywords": ["how it works", "working", "kaise kaam karta hai", "kaam kaise karta hai", "working process", "app ka process", "how to use", "kaise use kare"],
+          "question": "How does the app work?",
+          "answer": "React Native app hai with MongoDB backend. JWT tokens use karta hai for authentication. Form validation aur secure routes bhi hai. Frontend React Native, backend Node.js/Express, database MongoDB."
+        },
+        {
+          "keywords": ["functions", "main functions", "kya kaam karta hai", "app kya karta hai", "app ke functions", "what app does", "app ka use", "app ke kaam"],
+          "question": "What are the main functions?",
+          "answer": "Main functions hain: User Registration (signup), User Authentication (login), Profile Management, Token Validation, Form Validation, Database Operations, Secure API Access."
+        }
+      ]
+    },
+    "authentication": {
+      "title": "Authentication & Security",
+      "questions": [
+        {
+          "keywords": ["login", "signin", "kaise login kare", "login kaise kare", "signin process", "authentication", "app mein login", "kya login karna hai"],
+          "question": "How to login to the app?",
+          "answer": "Login karne ke liye: 1) Email address enter karo, 2) Password enter karo, 3) Login button press karo. Successful login ke baad JWT token milta hai jo 7 din valid hai. Token secure API calls ke liye use hota hai."
+        },
+        {
+          "keywords": ["signup", "register", "registration", "account banaye", "new account", "account create", "signup kaise kare", "nae account banane", "registration process", "create a new account", "how to create account", "account kaise banaye", "create account", "new account banane", "account registration"],
+          "question": "How to create a new account?",
+          "answer": "Signup karne ke liye: 1) Name enter karo, 2) Email address enter karo, 3) Password enter karo (minimum 6 characters), 4) Confirm password, 5) Signup button press karo. Form validation hoti hai aur password encrypt ho kar database mein save hota hai."
+        },
+        {
+          "keywords": ["password", "password requirements", "password policy"],
+          "question": "What are the password requirements?",
+          "answer": "Password requirements: Minimum 6 characters, Should include letters and numbers, Encrypted before storing in database, Case-sensitive, Can be changed from profile section."
+        },
+        {
+          "keywords": ["token", "jwt", "jwt token", "authentication token"],
+          "question": "What is JWT token?",
+          "answer": "JWT (JSON Web Token) authentication ke liye use hota hai. Login ke baad generate hota hai aur 7 din valid rehta hai. Token user identity verify karta hai aur secure API calls enable karta hai. Token expire hone ke baad dobara login karna padta hai."
+        },
+        {
+          "keywords": ["logout", "signout", "logout kaise kare"],
+          "question": "How to logout from the app?",
+          "answer": "Logout karne ke liye: 1) Profile section mein jao, 2) Logout button press karo, 3) Confirm logout. Logout karne se JWT token expire ho jata hai aur user ko login screen redirect kar diya jata hai."
+        },
+        {
+          "keywords": ["security", "security features", "security measures"],
+          "question": "What security features are available?",
+          "answer": "Security features: JWT token authentication, Password encryption (bcrypt), Form validation, Protected routes, Input sanitization, CORS configuration, Rate limiting, Secure headers, Error handling without sensitive data exposure."
+        }
+      ]
+    },
+    "technical": {
+      "title": "Technical Details",
+      "questions": [
+        {
+          "keywords": ["mai","hoo" , "gaurav" ,"name","username"],
+          "question": "What is your name?",
+          "answer": "My name is Gaurav. I am the developer of this application."
+        },
+        {
+          "keywords": ["api", "endpoints", "api endpoints", "routes"],
+          "question": "What are the available API endpoints?",
+          "answer": "Available API endpoints: POST /api/auth/register (signup), POST /api/auth/login (authentication), GET /api/auth/profile (get user profile), PUT /api/auth/profile (update profile), DELETE /api/auth/profile (delete account), POST /api/auth/logout (logout)."
+        },
+        {
+          "keywords": ["database", "mongodb", "data storage"],
+          "question": "What database is used?",
+          "answer": "MongoDB use kiya hai. User data store karne ke liye users collection hai. Secure aur scalable hai. Mongoose ODM use kiya hai for data modeling aur validation. Localhost:27017 pe default connection."
+        },
+        {
+          "keywords": ["frontend", "react native", "expo", "ui"],
+          "question": "What technologies are used in frontend?",
+          "answer": "Frontend technologies: React Native with Expo, Navigation hooks, Context API for state management, TailwindCSS/Nativewind for styling, SafeAreaView for mobile UI, Form validation hooks, AsyncStorage for local data."
+        },
+        {
+          "keywords": ["backend", "nodejs", "express", "server"],
+          "question": "What technologies are used in backend?",
+          "answer": "Backend technologies: Node.js runtime, Express.js framework, MongoDB with Mongoose ODM, JWT for authentication, Bcrypt for password hashing, CORS for cross-origin requests, dotenv for environment variables."
+        },
+        {
+          "keywords": ["error", "error handling", "errors"],
+          "question": "How are errors handled?",
+          "answer": "Error handling: Try-catch blocks in async functions, Form validation with error messages, API error responses with proper status codes, User-friendly error messages, Console logging for debugging, Graceful fallbacks in chat system."
+        }
+      ]
+    },
+    "user": {
+      "title": "User Account & Profile",
+      "questions": [
+    {
+      "keywords": ["profile", "user profile", "account"],
+      "question": "What is included in user profile?",
+      "answer": "User profile mein sab kuch milega jo tumhari digital zindagi ka CV hai 😎 — Name, Email, kab account banaya, last kab login kiya (haan stalk ho raha hai 👀), profile edit options, password change, account delete option (gusse mein mat daba dena 😅). Profile pic future mein aayegi — abhi apni shakal imagination pe chalao."
+    },
+    {
+      "keywords": ["update profile", "edit profile", "profile change"],
+      "question": "How to update profile information?",
+      "answer": "Profile update karna rocket science nahi hai bhai 🚀: 1) Profile section kholo, 2) Edit dabao, 3) Naam theek karo (apna hi likhna, fake swag mat dikhao 😏), 4) Save kar do. Email change karoge to system bolega 'ruk bhai, verify kar pehle'."
+    },
+    {
+      "keywords": ["delete account", "remove account", "account delete"],
+      "question": "How to delete account?",
+      "answer": "Account delete karna hai? Itna bhi gussa kyun bhai 😭: 1) Profile mein jao, 2) Delete option dabao, 3) Confirm karo, 4) Done. Lekin dhyaan rahe — ek baar delete kiya to sab data gaya… wapas nahi milega, bilkul ex ki tarah 💀"
+    },
+    {
+      "keywords": ["routes", "protected routes", "navigation"],
+      "question": "What are protected routes?",
+      "answer": "Protected routes VIP club jaise hote hain 🔥 — bina login entry nahi. Agar login nahi ho to seedha bahar phek dete hain (login page pe 😆). JWT token bouncer ki tarah check karta hai — 'andar aane layak ho ya nahi'. Examples: Dashboard, Profile, Settings — ye sab elite zone hai boss."
+    }
+  ]
+    },
+    "conversational": {
+      "title": "Conversational & Help",
+      "questions": [
+        {
+          "keywords": ["hi", "hello", "namaste"],
+          "question": "Greetings",
+          "answer": "नमस्ते! मैं आपके app का help desk हूं। Ye app authentication ke liye hai - login, signup, user management karta hai. Kya jaanna chahte hain?"
+        },
+        {
+          "keywords": ["how are you", "kya haal hai"],
+          "question": "How are you?",
+          "answer": "Main bilkul theek hun! Aapke app ki help karne ke liye ready hun. Kya sawal hai?"
+        },
+        {
+          "keywords": ["thanks", "thank you", "dhanyawad"],
+          "question": "Thanks",
+          "answer": "Most welcome! Aur koi sawal hai toh poochiye. Always ready to help! 😊"
+        },
+        {
+          "keywords": ["bye", "goodbye", "alvida"],
+          "question": "Goodbye",
+          "answer": "Bye! Jab bhi help chahiye, main available hun. Take care! 👋"
+        },
+        {
+          "keywords": ["help", "madad", "kya kar sakta hai"],
+          "question": "What can you help with?",
+          "answer": "Main help kar sakta hun: Authentication process, App features, Login/signup details, Security measures, API information, Technical details, Profile management, Error troubleshooting, aur general app information!"
+        }
+      ]
+    }
+  },
+  "fallback_responses": {
+    "greetings": {
+      "hi": "नमस्ते! मैं आपके app का help desk हूं। Ye app authentication ke liye hai. Kya jaanna chahte hain?",
+      "hello": "Hello! Main aapke app ka help desk hun. Ye app authentication ke liye hai. Kuch poochein!",
+      "namaste": "नमस्ते! Aapka swagat hai! Kya jaanna chahte hain app ke baare mein?"
+    },
+    "appreciation": {
+      "thanks": "Most welcome! Aur koi sawal hai toh poochiye. Always ready to help! 😊",
+      "thank you": "You're welcome! Main yahan hun aapki help karne ke liye.",
+      "awesome": "Thanks! Main yahan hun aapki help karne ke liye. Kya poochna chahte hain?"
+    },
+    "farewell": {
+      "bye": "Bye! Jab bhi help chahiye, main available hun. Take care! 👋",
+      "goodbye": "Goodbye! Have a great day! Main hamesha available hun.",
+      "alvida": "अलविदा! फिर मिलेंगे! मैं हमेशा आपकी सेवा में तैयार हूं।"
+    },
+    "casual": {
+      "ok": "Great! Aur koi information chahiye toh poochiye!",
+      "good": "Thank you! Kya specific jaanna chahte hain app ke baare mein?",
+      "great": "Excellent! Kya detail chahiye aapko?"
+    },
+    "help_request": {
+      "help": "Of course! Main help kar sakta hun: authentication, features, login/signup process, API endpoints, security measures, aur technical details.",
+      "kya kar sakta hai": "Main app ke har aspect ki detail de sakta hun - authentication se lekar technical details tak!"
+    }
+  },
+  "default_response": "Ye app React Native Expo Application hai jo authentication provide karta hai. Main features hain: JWT Authentication, Form Validation, Protected Routes, User Management, MongoDB Integration. Kya specific jaanna chahte hain?"
+}

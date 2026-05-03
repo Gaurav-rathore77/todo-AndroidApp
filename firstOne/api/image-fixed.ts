@@ -14,10 +14,10 @@ export const uploadImageFromUriFixed = async (uri: string, fileName: string, fol
     
     // Try different URLs in order of preference using centralized IP
     const urls = [
-      getApiUrl(),                 // Use centralized IP first
-      `http://${IP_ADDRESS}:3000`, // Direct IP reference
-      'http://localhost:3000',     // For web testing
-      'http://127.0.0.1:3000'     // Alternative localhost
+      getApiUrl(),                 
+      `http://${IP_ADDRESS}:3000`, 
+      'http://localhost:3000',     
+      'http://127.0.0.1:3000'     
     ];
     
     for (const url of urls) {
