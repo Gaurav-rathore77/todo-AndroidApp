@@ -136,7 +136,7 @@
           "type": "file",
           "name": "chat.tsx",
           "path": "app\\(app)\\chat.tsx",
-          "size": 8830,
+          "size": 8828,
           "language": "React TSX",
           "preview": "import React, { useState, useEffect } from 'react';\nimport {\n  View,\n  Text,\n  TextInput,\n  TouchableOpacity,\n  FlatList,\n  ScrollView,\n  KeyboardAvoidingView,\n  Platform,\n  ActivityIndicator,\n  Alert\n} from 'react-native';\nimport { SafeAreaView } from 'react-native-safe-area-context';\n\ninterface Message {\n  id: string;\n  role: 'user' | 'assistant';\n  content: string;\n  timestamp: string;\n  sources?: Array<{\n    content: string;\n    similarity: number;\n    metadata: any;\n  }>;\n}\n\ninterface ChatS..."
         },
@@ -323,7 +323,7 @@
           "type": "file",
           "name": "knowledgeBase.json",
           "path": "backend\\data\\knowledgeBase.json",
-          "size": 11792,
+          "size": 12005,
           "language": "JSON",
           "preview": "{\n  \"categories\": {\n    \"basic\": {\n      \"title\": \"Basic App Information\",\n      \"questions\": [\n        {\n          \"keywords\": [\"what is this app\", \"kya karta hai app\", \"app kya hai\", \"what is app\", \"ye app kya hai\", \"app ka kaam\", \"app kya karti hai\", \"what does this app do\", \"app ka purpose\", \"app information\"],\n          \"question\": \"What is this app?\",\n          \"answer\": \"This is a React Native Expo Application with Authentication. It provides complete authentication system with JWT tokens..."
         },
@@ -441,9 +441,9 @@
       "type": "file",
       "name": "server.js",
       "path": "backend\\server.js",
-      "size": 1227,
+      "size": 1225,
       "language": "JavaScript",
-      "preview": "require('dotenv').config();\nconst express = require('express');\nconst cors = require('cors');\nconst connectDB = require('./config/db');\nconst authRoutes = require('./routes/auth');\nconst ragRoutes = require('./routes/rag');\nconst simpleChatRoutes = require('./routes/simpleChat');\n\nconst app = express();\n\nconnectDB();\n\napp.use(cors({\n  origin: ['http://localhost:8081', 'exp://10.225.255.35:8081', '*'],\n  credentials: true\n}));\n\n// Increase timeout and add request logging\napp.use((req, res, next) ..."
+      "preview": "require('dotenv').config();\nconst express = require('express');\nconst cors = require('cors');\nconst connectDB = require('./config/db');\nconst authRoutes = require('./routes/auth');\nconst ragRoutes = require('./routes/rag');\nconst simpleChatRoutes = require('./routes/simpleChat');\n\nconst app = express();\n\nconnectDB();\n\napp.use(cors({\n  origin: ['http://localhost:8081', 'exp://192.168.1.5:8081', '*'],\n  credentials: true\n}));\n\n// Increase timeout and add request logging\napp.use((req, res, next) =>..."
     },
     {
       "type": "directory",

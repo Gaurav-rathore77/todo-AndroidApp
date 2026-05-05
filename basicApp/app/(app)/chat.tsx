@@ -31,7 +31,7 @@ interface ChatState {
   inputText: string;
 }
 
-const API_BASE_URL = 'http://10.225.255.35:5005/api/chat';
+const API_BASE_URL = 'http://192.168.1.5:5005/api/chat';
 
 export default function ChatScreen() {
   const [chatState, setChatState] = useState<ChatState>({
