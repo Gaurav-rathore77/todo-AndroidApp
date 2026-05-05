@@ -16,15 +16,7 @@ dbConnect();
 app.use(cors({
   origin: [
     'http://localhost:8081', 
-    'http://127.0.0.1:8081',
-    'http://192.168.1.4:8081',
-    'http://192.168.1.6:8081',
-    'http://localhost:19006',
-    'http://127.0.0.1:19006',
-    'exp://localhost:19000',
-    'exp://127.0.0.1:19000',
-    'http://192.168.1.4:19000',
-    'http://192.168.1.6:19000'
+    'http://10.40.170.35:8081'
   ],
   credentials: true
 }));
@@ -35,12 +27,22 @@ app.use("/profile", profileRoutes);
 app.use("/proxy", proxyRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");    
+  res.send("Backend is running! ✅");    
 });
+
+app.get("/test", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    message: "Backend connection test successful",
+    timestamp: new Date().toISOString()
+  });    
+});
+
 app.get("/auth/imagekit", (req, res) => {
   const result = imagekit.getAuthenticationParameters();
   res.send(result);
 });
+
 app.listen(3000, "0.0.0.0", () => {
   console.log("Server running");
 });

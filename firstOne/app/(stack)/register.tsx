@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { registerApi } from '../../api/auth';
 import { uploadImageFromUriFixed } from '../../api/image-fixed';
 
@@ -63,6 +64,43 @@ export default function Register() {
             } finally {
                 setUploadingImage(false);
             }
+        }
+    };
+
+    const handleFingerprintRegistration = async () => {
+        try {
+            // Check if hardware supports biometric authentication
+            const hasHardware = await LocalAuthentication.hasHardwareAsync();
+            
+            if (!hasHardware) {
+                Alert.alert("Error", "Biometric authentication is not supported on this device");
+                return;
+            }
+
+            // Check if user has enrolled biometrics
+            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+            
+            if (!isEnrolled) {
+                Alert.alert("Error", "No biometrics enrolled. Please set up fingerprint or face ID in your device settings");
+                return;
+            }
+
+            // Authenticate to verify identity before registration
+            const result = await LocalAuthentication.authenticateAsync({
+                promptMessage: "Verify Identity for Registration",
+                fallbackLabel: "Use Manual Registration",
+                cancelLabel: "Cancel",
+            });
+
+            if (result.success) {
+                Alert.alert("Success", "Identity verified! You can now complete registration.");
+                // Optionally pre-fill some fields or enable biometric login for future
+            } else {
+                Alert.alert("Error", "Identity verification failed");
+            }
+        } catch (error) {
+            console.error("Fingerprint registration error:", error);
+            Alert.alert("Error", "Failed to verify identity with fingerprint");
         }
     };
 
@@ -176,10 +214,22 @@ export default function Register() {
                 </TouchableOpacity>
 
                 {/* Footer */}
-                <View className="flex-row justify-between">
+                <View className="flex-row justify-between mb-4">
                     <TouchableOpacity onPress={() => router.replace('/login')}>
                         <Text className="text-indigo-600 text-sm">Already have an account?</Text>
                     </TouchableOpacity>
+                </View>
+
+                {/* Fingerprint Registration Option */}
+                <View className="pt-4 border-t border-gray-200">
+                    <TouchableOpacity
+                        onPress={handleFingerprintRegistration}
+                        className="flex-row items-center justify-center py-3"
+                    >
+                        <Text className="text-2xl mr-2">👆</Text>
+                        <Text className="text-indigo-600 text-center font-semibold">Register with Fingerprint</Text>
+                    </TouchableOpacity>
+                    <Text className="text-gray-500 text-xs text-center mt-2">Verify your identity for faster registration</Text>
                 </View>
             </View>
         </View>

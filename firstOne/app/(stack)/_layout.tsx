@@ -8,6 +8,7 @@ export default function StackLayout() {
       <Stack.Screen name="auth/register" />
       <Stack.Screen name="product/index" />
       <Stack.Screen name="product/[id]/page" />
+      <Stack.Screen name="testDevice/index" />
     </Stack>
   );
 }

@@ -8,7 +8,7 @@ const imagekit = new ImageKit({
 export const uploadImage = async (file: File, fileName: string, folder?: string): Promise<string> => {
   try {
     // Get authentication parameters first
-    const authParams = await fetch('http://192.168.1.4:3000/auth/imagekit').then(res => res.json());
+    const authParams = await fetch('http://192.168.1.5:3000/auth/imagekit').then(res => res.json());
     
     const fullFileName = folder ? `${folder}/${fileName}` : fileName;
     

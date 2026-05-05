@@ -14,6 +14,7 @@ interface UserState {
   isLoading: boolean;
   error: string | null;
   login: (username: string, password: string) => Promise<boolean>;
+  fingerprintLogin: () => void;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
 }
@@ -40,6 +41,25 @@ export const useUserStore = create<UserState>((set) => ({
       });
       return false;
     }
+  },
+
+  fingerprintLogin: () => {
+    console.log("👆 Fingerprint login");
+    const mockUser = {
+      id: "fingerprint_user",
+      username: "Fingerprint User",
+      email: "user@fingerprint.com",
+      profileImage: undefined
+    };
+    
+    const mockToken = "fingerprint_token_" + Date.now();
+    
+    set({
+      user: mockUser,
+      token: mockToken,
+      isLoading: false,
+      error: null
+    });
   },
 
   logout: () => {

@@ -53,7 +53,7 @@ export const loginApi = async (credentials: LoginRequest): Promise<LoginResponse
         }
     }
     
-    throw lastError || new Error('Network connection failed. Please check your internet connection and make sure backend is running on 192.168.1.4:3000');
+    throw lastError || new Error('Network connection failed. Please check your internet connection and make sure backend is running on 192.168.1.5:3000');
 };
 
 export const registerApi = async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -84,5 +84,5 @@ export const registerApi = async (credentials: LoginRequest): Promise<LoginRespo
         }
     }
     
-    throw lastError || new Error('Network connection failed. Please check your internet connection and make sure backend is running on 192.168.1.4:3000');
+    throw lastError || new Error('Network connection failed. Please check your internet connection and make sure backend is running on 192.168.1.5:3000');
 };

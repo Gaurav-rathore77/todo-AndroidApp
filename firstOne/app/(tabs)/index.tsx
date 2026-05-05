@@ -206,6 +206,15 @@ export default function HomeTab() {
           </View>
         )}
 
+        <View>
+          <Pressable
+            className="bg-blue-500 px-4 py-3 rounded-lg w-full mb-3"
+            onPress={() => router.push("/testDevice" as any)}
+          >
+            <Text className="text-white text-center font-semibold">Test Device</Text>
+          </Pressable>
+        </View>
+
         
         {/* Info Section */}
         <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">

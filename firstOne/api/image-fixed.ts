@@ -22,12 +22,19 @@ export const uploadImageFromUriFixed = async (uri: string, fileName: string, fol
     
     for (const url of urls) {
       try {
+        console.log(`🔍 Trying ImageKit auth at: ${url}/auth/imagekit`);
         authResponse = await fetch(`${url}/auth/imagekit`);
-        if (authResponse.ok) {
+        console.log(`📊 Response status: ${authResponse?.status}`);
+        
+        if (authResponse && authResponse.ok) {
           authParams = await authResponse.json();
+          console.log(`✅ Auth successful from: ${url}`);
           break;
+        } else {
+          console.log(`❌ Failed response from: ${url}`);
         }
       } catch (error) {
+        console.log(`❌ Error connecting to ${url}:`, error instanceof Error ? error.message : 'Unknown error');
         continue;
       }
     }

@@ -11,7 +11,7 @@ export const uploadImageFromUri = async (uri: string, fileName: string, folder: 
     
     // Try multiple possible API URLs for better connectivity
     const possibleUrls = [
-      'http://192.168.1.4:3000',   // Your actual IP address - try first
+      'http://192.168.1.5:3000',   // Your actual IP address - try first
       'http://localhost:3000',     // Web testing
       'http://127.0.0.1:3000'     // Alternative localhost
     ];
