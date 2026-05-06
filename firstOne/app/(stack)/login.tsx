@@ -155,6 +155,28 @@ export default function Login() {
                         <Text className="text-blue-600 text-center font-semibold">Login with Fingerprint</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* Media Recorder Link */}
+                <View className="mt-4">
+                    <TouchableOpacity
+                        onPress={() => router.push('/media-recorder' as any)}
+                        className="flex-row items-center justify-center py-3 bg-green-100 rounded-lg"
+                    >
+                        <Text className="text-2xl mr-2">🎙️🎥️</Text>
+                        <Text className="text-green-600 text-center font-semibold">Media Recorder</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Admin Panel Link */}
+                <View className="mt-4">
+                    <TouchableOpacity
+                        onPress={() => router.push('/admin-panel' as any)}
+                        className="flex-row items-center justify-center py-3 bg-purple-100 rounded-lg"
+                    >
+                        <Text className="text-2xl mr-2">🛠️</Text>
+                        <Text className="text-purple-600 text-center font-semibold">Admin Panel</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

@@ -9,6 +9,8 @@ export default function StackLayout() {
       <Stack.Screen name="product/index" />
       <Stack.Screen name="product/[id]/page" />
       <Stack.Screen name="testDevice/index" />
+      <Stack.Screen name="media-recorder" />
+      <Stack.Screen name="admin-panel" />
     </Stack>
   );
 }

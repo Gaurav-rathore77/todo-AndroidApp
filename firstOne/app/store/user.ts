@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginApi } from "../../api/auth";
 
 interface User {
@@ -19,7 +21,9 @@ interface UserState {
   updateUser: (userData: Partial<User>) => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
   user: null,
   token: null,
   isLoading: false,
@@ -72,4 +76,10 @@ export const useUserStore = create<UserState>((set) => ({
       user: state.user ? { ...state.user, ...userData } : null
     }));
   },
-}));
+}),
+    {
+      name: 'user-store',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
